@@ -61,7 +61,7 @@ const ProfilePage = () => {
                                 <p><strong>Booking Code:</strong> {booking.bookingConfirmationCode}</p>
                                 <p><strong>Check-in Date:</strong> {booking.checkInDate}</p>
                                 <p><strong>Check-out Date:</strong> {booking.checkOutDate}</p>
-                                <p><strong>Total Guests:</strong> {booking.totalNumOfGuest}</p>
+                                <p><strong>Total Guests:</strong> {booking.total_guest}</p>
                                 <p><strong>Room Type:</strong> {booking.room.roomType}</p>
                                 <img src={booking.room.photoURL} alt="Room" className="room-photo" />
                             </div>
