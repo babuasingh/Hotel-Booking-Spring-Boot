@@ -86,7 +86,7 @@ A full-stack Hotel Booking application that allows users to browse, book, and ma
 
 ---
 
-# Hotel Booking API Documentation
+# API Documentation
 
 This document provides comprehensive details about the Hotel Booking API endpoints, their functionality, and request parameters.
 
