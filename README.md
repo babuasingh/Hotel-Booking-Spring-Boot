@@ -85,11 +85,6 @@ A full-stack Hotel Booking application that allows users to browse, book, and ma
     ```
 
 ---
-##  Demo
-
-> _Add screenshots here of the home page, booking page, and admin panel to showcase your app._
-
----
 
 ## 🧑‍💻 Author
 
