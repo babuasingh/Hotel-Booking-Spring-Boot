@@ -36,6 +36,15 @@ A full-stack Hotel Booking application that allows users to browse, book, and ma
 
 ---
 
+### Demo
+
+
+https://github.com/user-attachments/assets/e6a770ba-41a1-4377-ad51-12d05bd92a4b
+
+
+---
+
+
 ## 🛠️ Installation & Setup
 
 ### Backend (Spring Boot)
