@@ -62,17 +62,18 @@ https://github.com/user-attachments/assets/e6a770ba-41a1-4377-ad51-12d05bd92a4b
     spring.datasource.username=your_mysql_username
     spring.datasource.password=your_mysql_password
 
-    ```
-    if you are using Postgre SQL adjust the url and driver class name accordingly
-   
-4. Set up `.env` at src/main/resources/.env (if not present add it manually):
-    ```properties
+    #cloudinary credentials
     CLOUDINARY_URL= your_cloudinary_url
     CLOUDINARY_NAME = cloud_name
     CLOUDINARY_API_KEY =  cloud_api_key
     CLOUDINARY_API_SECRET = cloud_secret_key
+
+    #jwt secret key
     secretkey = your_JWT_secretkey
+
     ```
+    if you are using Postgre SQL adjust the url and driver class name accordingly
+   
 
 ---
 
