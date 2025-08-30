@@ -67,31 +67,20 @@ public class BookingServiceImpl implements BookingService {
             response.setMessage("Error saving the room "+e.getMessage());
 //            System.out.println("The error is "+e.getMessage());
         }
+
+//        System.out.println("The saved booking is :"+response);
         return response;
     }
 
-    private boolean roomIsAvailable(Booking bookingRequest, List<Booking> existingBookings) {
 
+    private boolean roomIsAvailable(Booking bookingRequest, List<Booking> existingBookings) {
         return existingBookings.stream()
                 .noneMatch(existingBooking ->
-                        bookingRequest.getCheckInDate().equals(existingBooking.getCheckInDate())
-                                || bookingRequest.getCheckOutDate().isBefore(existingBooking.getCheckOutDate())
-                                || (bookingRequest.getCheckInDate().isAfter(existingBooking.getCheckInDate())
-                                && bookingRequest.getCheckInDate().isBefore(existingBooking.getCheckOutDate()))
-                                || (bookingRequest.getCheckInDate().isBefore(existingBooking.getCheckInDate())
-
-                                && bookingRequest.getCheckOutDate().equals(existingBooking.getCheckOutDate()))
-                                || (bookingRequest.getCheckInDate().isBefore(existingBooking.getCheckInDate())
-
-                                && bookingRequest.getCheckOutDate().isAfter(existingBooking.getCheckOutDate()))
-
-                                || (bookingRequest.getCheckInDate().equals(existingBooking.getCheckOutDate())
-                                && bookingRequest.getCheckOutDate().equals(existingBooking.getCheckInDate()))
-
-                                || (bookingRequest.getCheckInDate().equals(existingBooking.getCheckOutDate())
-                                && bookingRequest.getCheckOutDate().equals(bookingRequest.getCheckInDate()))
+                        bookingRequest.getCheckInDate().isBefore(existingBooking.getCheckOutDate())
+                                && bookingRequest.getCheckOutDate().isAfter(existingBooking.getCheckInDate())
                 );
     }
+
 
     @Override
     public Response findBookingByConfirmationCode(String confirmationCode) {

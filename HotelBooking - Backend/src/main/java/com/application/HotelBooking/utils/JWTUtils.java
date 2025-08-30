@@ -1,8 +1,9 @@
 package com.application.HotelBooking.utils;
 
-import io.github.cdimascio.dotenv.Dotenv;
+//import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,10 @@ public class JWTUtils {
 
     private final SecretKey key;
 
-    JWTUtils(){
-        Dotenv dotenv = Dotenv.load();
-        String secretstring = dotenv.get("secretkey");
+    JWTUtils(@Value("${secretkey}") String secretstring){
+//        Dotenv dotenv = Dotenv.load();
+//        String secretstring = dotenv.get("secretkey");
+//        System.out.println("The secret key is "+secretstring);
         byte[] keybytes = Base64.getDecoder().decode(secretstring.getBytes(StandardCharsets.UTF_8));
         this.key = new SecretKeySpec(keybytes , "HmacSHA256");
     }

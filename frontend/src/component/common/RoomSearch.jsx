@@ -38,8 +38,12 @@ const RoomSearch = ({ handleSearchResult }) => {
     }
     try {
       // Convert startDate to the desired format
-      const formattedStartDate = startDate ? startDate.toISOString().split('T')[0] : null;
-      const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
+      const formatDateLocal = (date) =>
+        date ? date.toLocaleDateString('en-CA') : null; // en-CA → YYYY-MM-DD
+
+      const formattedStartDate = formatDateLocal(startDate);
+      const formattedEndDate = formatDateLocal(endDate);
+
       // Call the API to fetch available rooms
       const response = await ApiService.getAvailableRoomsByDateAndType(formattedStartDate, formattedEndDate, roomType);
 
@@ -50,11 +54,12 @@ const RoomSearch = ({ handleSearchResult }) => {
           return
         }
         console.log(response.roomList);
-        
+
         handleSearchResult(response.roomList);
         setError('');
       }
     } catch (error) {
+      console.log(error.response.data.message);
       showError("Unown error occured: " + error.response.data.message);
     }
   };
@@ -67,8 +72,11 @@ const RoomSearch = ({ handleSearchResult }) => {
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            dateFormat="dd/MM/yyyy"
+            dateFormat="yyyy-MM-dd"
+            showMonthDropdown
+            showYearDropdown
             placeholderText="Select Check-in Date"
+            dropdownMode="select"   // makes month/year selectable
           />
         </div>
         <div className="search-field">
@@ -76,8 +84,11 @@ const RoomSearch = ({ handleSearchResult }) => {
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            dateFormat="dd/MM/yyyy"
+            dateFormat="yyyy-MM-dd"
+            showMonthDropdown
+            showYearDropdown
             placeholderText="Select Check-out Date"
+            dropdownMode="select"   // makes month/year selectable
           />
         </div>
 
