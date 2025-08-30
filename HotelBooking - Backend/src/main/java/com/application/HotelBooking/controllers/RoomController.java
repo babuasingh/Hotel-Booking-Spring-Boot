@@ -74,6 +74,9 @@ public class RoomController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
             @RequestParam(required = false) String roomType
     ) {
+//        System.out.println(checkInDate.toString());
+//        System.out.println(checkOutDate.toString());
+//        System.out.println(roomType);
         if (checkInDate == null || roomType == null || roomType.isBlank() || checkOutDate == null) {
             Response response = new Response();
             response.setStatusCode(400);

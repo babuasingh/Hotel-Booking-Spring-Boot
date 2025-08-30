@@ -29,6 +29,7 @@ function LoginPage() {
                 navigate(from, { replace: true });
             }
         } catch (error) {
+            console.log(error.response?.data?.message || error.message);
             setError(error.response?.data?.message || error.message);
             setTimeout(() => setError(''), 5000);
         }

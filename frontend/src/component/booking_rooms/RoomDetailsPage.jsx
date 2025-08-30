@@ -114,6 +114,8 @@ const RoomDetailsPage = () => {
         }, 10000);
       }
     } catch (error) {
+      console.log("Erros is here : ",error.response?.data?.message || error.message);
+      
       setErrorMessage(error.response?.data?.message || error.message);
       setTimeout(() => setErrorMessage(''), 5000); // Clear error message after 5 seconds
     }
@@ -181,6 +183,8 @@ const RoomDetailsPage = () => {
               selectsStart
               startDate={checkInDate}
               endDate={checkOutDate}
+              showMonthDropdown
+              showYearDropdown
               placeholderText="Check-in Date"
               dateFormat="dd/MM/yyyy"
               // dateFormat="yyyy-MM-dd"
@@ -192,7 +196,8 @@ const RoomDetailsPage = () => {
               selectsEnd
               startDate={checkInDate}
               endDate={checkOutDate}
-              minDate={checkInDate}
+              showMonthDropdown
+              showYearDropdown
               placeholderText="Check-out Date"
               // dateFormat="yyyy-MM-dd"
               dateFormat="dd/MM/yyyy"
