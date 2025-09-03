@@ -25,3 +25,5 @@ replay_pid*
 .DS_Store
 
 frontend/node_modules/
+
+.env
