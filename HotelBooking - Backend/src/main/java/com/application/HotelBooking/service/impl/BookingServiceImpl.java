@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -37,6 +38,9 @@ public class BookingServiceImpl implements BookingService {
             }
             if(bookingRequest.getCheckInDate().isEqual(bookingRequest.getCheckOutDate())){
                 throw new IllegalArgumentException("CheckIn and CheckOut Date must be different");
+            }
+            if(bookingRequest.getCheckInDate().isBefore(LocalDate.now())){
+                throw new IllegalArgumentException("CheckIn Date cannot be in Past");
             }
             User user = userRepo.findById(userId).orElseThrow(()->new OurException("User doesn't exist"));
             Room room = roomRepo.findById(roomId).orElseThrow(()->new OurException("Room doesn't exist"));
