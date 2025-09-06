@@ -59,7 +59,7 @@ const RoomDetailsPage = () => {
     const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
-    const totalDays = Math.round(Math.abs((endDate - startDate) / oneDay)) + 1;
+    const totalDays = Math.round(Math.abs((endDate - startDate) / oneDay)) ;
 
     // Calculate total number of guests
     const totalGuests = numAdults + numChildren;
@@ -80,8 +80,8 @@ const RoomDetailsPage = () => {
       const endDate = new Date(checkOutDate);
 
       // Log the original dates for debugging
-      console.log("Original Check-in Date:", startDate);
-      console.log("Original Check-out Date:", endDate);
+      // console.log("Original Check-in Date:", startDate);
+      // console.log("Original Check-out Date:", endDate);
 
       // Convert dates to YYYY-MM-DD format, adjusting for time zone differences
       const formattedCheckInDate = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
@@ -89,8 +89,8 @@ const RoomDetailsPage = () => {
 
 
       // Log the original dates for debugging
-      console.log("Formated Check-in Date:", formattedCheckInDate);
-      console.log("Formated Check-out Date:", formattedCheckOutDate);
+      // console.log("Formated Check-in Date:", formattedCheckInDate);
+      // console.log("Formated Check-out Date:", formattedCheckOutDate);
 
       // Create booking object
       const booking = {

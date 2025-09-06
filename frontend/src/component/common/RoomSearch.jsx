@@ -53,7 +53,7 @@ const RoomSearch = ({ handleSearchResult }) => {
           showError('Room not currently available for this date range on the selected rom type.');
           return
         }
-        console.log(response.roomList);
+        // console.log(response.roomList);
 
         handleSearchResult(response.roomList);
         setError('');
