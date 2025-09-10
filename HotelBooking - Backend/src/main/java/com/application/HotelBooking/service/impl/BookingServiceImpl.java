@@ -18,9 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 @Service
 public class BookingServiceImpl implements BookingService {
+
 
     @Autowired
     private RoomRepo roomRepo;
@@ -29,21 +32,23 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingRepo bookingRepo;
 
+    private ConcurrentHashMap<Long, Semaphore> roomLocks;
+
+    public BookingServiceImpl() {
+        roomLocks = new ConcurrentHashMap<>(); // Allow only one thread at a time to access the critical section for a specific room i.e., booking process (saveBooking())
+    }
+
     @Override
     public Response saveBooking(Long roomId, Long userId, Booking bookingRequest) {
         Response response = new Response();
+        Semaphore semaphore = null;
         try {
-            if(bookingRequest.getCheckInDate().isAfter(bookingRequest.getCheckOutDate())){
-                throw new IllegalArgumentException("Check in Date must be before checkout Date");
-            }
-            if(bookingRequest.getCheckInDate().isEqual(bookingRequest.getCheckOutDate())){
-                throw new IllegalArgumentException("CheckIn and CheckOut Date must be different");
-            }
-            if(bookingRequest.getCheckInDate().isBefore(LocalDate.now())){
-                throw new IllegalArgumentException("CheckIn Date cannot be in Past");
-            }
-            User user = userRepo.findById(userId).orElseThrow(()->new OurException("User doesn't exist"));
-            Room room = roomRepo.findById(roomId).orElseThrow(()->new OurException("Room doesn't exist"));
+            BookingRequestValidation(bookingRequest);
+            semaphore = roomLocks.computeIfAbsent(roomId, key -> new Semaphore(1));
+            // Critical section starts here
+            semaphore.acquire();
+            User user = userRepo.findById(userId).orElseThrow(() -> new OurException("User doesn't exist"));
+            Room room = roomRepo.findById(roomId).orElseThrow(() -> new OurException("Room doesn't exist"));
 
 
             List<Booking> existingBookings = room.getBookings();
@@ -62,18 +67,33 @@ public class BookingServiceImpl implements BookingService {
             response.setBooking(bookingDTO);
             response.setMessage("Booking saved Successfully");
             response.setStatusCode(200);
-        }catch (OurException e){
+            // Critical section ends here
+        } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error saving the room "+e.getMessage());
+            response.setMessage("Error saving the room " + e.getMessage());
 //            System.out.println("The error is "+e.getMessage());
+        } finally {
+            if (semaphore != null)
+                semaphore.release();
         }
 
 //        System.out.println("The saved booking is :"+response);
         return response;
+    }
+
+    private void BookingRequestValidation(Booking bookingRequest) throws OurException {
+        if (bookingRequest.getCheckInDate().isAfter(bookingRequest.getCheckOutDate())) {
+            throw new IllegalArgumentException("Check in Date must be before checkout Date");
+        }
+        if (bookingRequest.getCheckInDate().isEqual(bookingRequest.getCheckOutDate())) {
+            throw new IllegalArgumentException("CheckIn and CheckOut Date must be different");
+        }
+        if (bookingRequest.getCheckInDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("CheckIn Date cannot be in Past");
+        }
     }
 
 
@@ -90,18 +110,17 @@ public class BookingServiceImpl implements BookingService {
     public Response findBookingByConfirmationCode(String confirmationCode) {
         Response response = new Response();
         try {
-            Booking booking=bookingRepo.findByBookingConfirmationCode(confirmationCode).orElseThrow(()->new OurException("No Booking Found"));
-            BookingDTO bookingDTO = Utils.mapBookingEntityToBookingDTOPlusBookedRooms(booking,true);
+            Booking booking = bookingRepo.findByBookingConfirmationCode(confirmationCode).orElseThrow(() -> new OurException("No Booking Found"));
+            BookingDTO bookingDTO = Utils.mapBookingEntityToBookingDTOPlusBookedRooms(booking, true);
             response.setStatusCode(200);
             response.setMessage("Successfull");
             response.setBooking(bookingDTO);
-        }catch (OurException e){
+        } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error Fetching the booking "+e.getMessage());
+            response.setMessage("Error Fetching the booking " + e.getMessage());
         }
         return response;
     }
@@ -116,13 +135,12 @@ public class BookingServiceImpl implements BookingService {
             response.setMessage("Successfull");
             response.setBookingList(bookingDTOList);
 
-        }catch (OurException e){
+        } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error Fetching all bookings "+e.getMessage());
+            response.setMessage("Error Fetching all bookings " + e.getMessage());
         }
         return response;
     }
@@ -131,18 +149,17 @@ public class BookingServiceImpl implements BookingService {
     public Response cancelBooking(Long bookingId) {
         Response response = new Response();
         try {
-            bookingRepo.findById(bookingId).orElseThrow(()->new OurException("No Booking Found"));
+            bookingRepo.findById(bookingId).orElseThrow(() -> new OurException("No Booking Found"));
             bookingRepo.deleteById(bookingId);
             response.setStatusCode(200);
             response.setMessage("Successfull");
 
-        }catch (OurException e){
+        } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error cancelling the booking"+e.getMessage());
+            response.setMessage("Error cancelling the booking" + e.getMessage());
         }
         return response;
     }
