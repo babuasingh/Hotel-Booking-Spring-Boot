@@ -1,7 +1,6 @@
 package com.application.HotelBooking.controllers;
 
 import com.application.HotelBooking.dto.Response;
-import com.application.HotelBooking.service.CloudinaryService;
 import com.application.HotelBooking.service.interfac.BookingService;
 import com.application.HotelBooking.service.interfac.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class RoomController {
     }
 
     @GetMapping("/room-by-id/{roomId}")
-    public ResponseEntity<Response> getRoomById(@PathVariable Long roomId) {
+    public ResponseEntity<Response> getRoomById(@PathVariable("roomId") Long roomId) {
         Response response = roomService.getRoomById(roomId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -95,7 +94,7 @@ public class RoomController {
 
     @PutMapping("/update/{roomId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> updateRoom(@PathVariable Long roomId,
+    public ResponseEntity<Response> updateRoom(@PathVariable("roomId") Long roomId,
                                                @RequestParam(value = "photo", required = false) MultipartFile photo,
                                                @RequestParam(value = "roomType", required = false) String roomType,
                                                @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
@@ -108,7 +107,7 @@ public class RoomController {
 
     @DeleteMapping("/delete/{roomId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> deleteRoom(@PathVariable Long roomId) {
+    public ResponseEntity<Response> deleteRoom(@PathVariable("roomId") Long roomId) {
         Response response = roomService.deleteRoom(roomId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
 

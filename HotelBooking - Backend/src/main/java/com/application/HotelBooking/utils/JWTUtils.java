@@ -17,14 +17,11 @@ import java.util.function.Function;
 @Service
 public class JWTUtils {
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 *7;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 *7; // 7 days in milliseconds
 
     private final SecretKey key;
 
     JWTUtils(@Value("${secretkey}") String secretstring){
-//        Dotenv dotenv = Dotenv.load();
-//        String secretstring = dotenv.get("secretkey");
-//        System.out.println("The secret key is "+secretstring);
         byte[] keybytes = Base64.getDecoder().decode(secretstring.getBytes(StandardCharsets.UTF_8));
         this.key = new SecretKeySpec(keybytes , "HmacSHA256");
     }

@@ -24,21 +24,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
     private CustomUserDetailsService customUserDetailsService;
-    @Autowired
     private JWTAuthFilter jwtAuthFilter;
 
-
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JWTAuthFilter jwtAuthFilter) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.csrf(customizer -> customizer.disable())
-                        .cors(Customizer.withDefaults())
-                        .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/rooms/**" , "/bookings/**").permitAll()
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/auth/**", "/rooms/**", "/bookings/**", "/ai/**").permitAll()
                         .anyRequest().authenticated()).
                 sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

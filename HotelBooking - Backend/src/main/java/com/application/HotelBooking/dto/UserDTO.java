@@ -1,7 +1,7 @@
 package com.application.HotelBooking.dto;
 
 
-import com.application.HotelBooking.entity.Booking;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 

@@ -20,8 +20,8 @@ public class BookingController {
 
     @PostMapping("/book-room/{roomId}/{userId}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public ResponseEntity<Response> saveBookings(@PathVariable Long roomId,
-                                                 @PathVariable Long userId,
+    public ResponseEntity<Response> saveBookings(@PathVariable("roomId") Long roomId,
+                                                 @PathVariable("userId") Long userId,
                                                  @RequestBody Booking bookingRequest) {
 
 //        System.out.println(bookingRequest);
@@ -39,14 +39,14 @@ public class BookingController {
     }
 
     @GetMapping("/get-by-confirmation-code/{confirmationCode}")
-    public ResponseEntity<Response> getBookingByConfirmationCode(@PathVariable String confirmationCode) {
+    public ResponseEntity<Response> getBookingByConfirmationCode(@PathVariable("confirmationCode") String confirmationCode) {
         Response response = bookingService.findBookingByConfirmationCode(confirmationCode);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/cancel/{bookingId}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public ResponseEntity<Response> cancelBooking(@PathVariable Long bookingId) {
+    public ResponseEntity<Response> cancelBooking(@PathVariable("bookingId") Long bookingId) {
         Response response = bookingService.cancelBooking(bookingId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

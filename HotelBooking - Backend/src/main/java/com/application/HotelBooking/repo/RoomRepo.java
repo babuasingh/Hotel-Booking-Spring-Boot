@@ -3,6 +3,7 @@ package com.application.HotelBooking.repo;
 import com.application.HotelBooking.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,11 +28,14 @@ public interface RoomRepo extends JpaRepository<Room, Long> {
        )
        """)
     List<Room> findAvailableRoomsByDatesAndTypes(
-           @RequestParam("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-           @RequestParam("checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-           @RequestParam("roomType") String roomType);
+           @Param("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+           @Param("checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+           @Param("roomType") String roomType);
 
     @Query("select r from Room r where r.id not in (select b.room.id from Booking b)")
     List<Room> getAllAvailableRooms();
+
+    @Query("select r from Room r where r.roomType like %:roomType and r.id not in (select b.room.id from Booking b)")
+    List<Room> getAllAvailableRoomsBasedOnRoomType(String roomType);
 
 }
