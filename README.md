@@ -1,4 +1,4 @@
-# 🏨 Hotel Booking Application
+# 🏨 Hotel Booking Application With Spring AI features 
 
 A full-stack Hotel Booking application that allows users to browse, book, and manage hotel reservations seamlessly. Built with **Spring Boot** for the backend and **React** for the frontend, the application also incorporates secure authentication, image handling, and persistent data storage.
 
@@ -12,23 +12,33 @@ A full-stack Hotel Booking application that allows users to browse, book, and ma
 - Book hotels with selected dates , room Types and manage bookings.
 - View booking history and cancel reservations.
 
+---
+
 ### ⚙️ Admin Features
 - Add, update, or remove hotel listings.
 - View all bookings and manage rooms.
 - Upload hotel room properties using Cloudinary integration.
 
 ---
-## Live => https://hotelbooking-application.netlify.app
+### ⚙️ AI Features
+- Spring AI integration to bring AI-powered capabilities into the application
+- A conversational assistant using ChatClient
+- Tool Calling so the AI can interact with backend services and fetch hotel/room-related information
+- RAG (Retrieval-Augmented Generation) to retrieve relevant information and provide contextual responses related to hotel amenities , policies etc.
+
 
 
 ## 🧰 Tech Stack
 
 ### Backend (Java)
 - **Spring Boot** – Main backend framework
+- **Spring AI** – for RAG and Tool Calling
 - **Spring Security** – Authentication & authorization
 - **JWT (JSON Web Token)** – Secure token-based login system
 - **JPA & Hibernate** – ORM for database interactions
-- **MySQL** – Relational database to persist user and booking data
+- **MySQL** – Relational database to persist user and booking 
+data
+- **PG Vector** – Used for RAG alongside docker
 - **Cloudinary** – Image upload and management service
 
 ### Frontend (JavaScript)
@@ -39,6 +49,7 @@ A full-stack Hotel Booking application that allows users to browse, book, and ma
 ---
 
 ### Demo
+currently this doesn't cover the spring AI part .
 
 
 https://github.com/user-attachments/assets/e6a770ba-41a1-4377-ad51-12d05bd92a4b
@@ -72,6 +83,40 @@ https://github.com/user-attachments/assets/e6a770ba-41a1-4377-ad51-12d05bd92a4b
 
     #jwt secret key
     secretkey = your_JWT_secretkey
+
+    #frontend-url
+    frontendUrl = ${FRONTEND_URL}
+
+
+    #logging configuration
+    logging.level.root=INFO
+    logging.file.name=backendlogs/hotelbooking.log
+    logging.logback.rollingpolicy.max-file-size=10MB
+    logging.logback.rollingpolicy.max-history=3
+    logging.logback.rollingpolicy.total-size-cap=20MB
+    logging.logback.rollingpolicy.file-name-pattern=backendlogs/    hotelbooking-%d{yyyy-MM-dd}.%i.log.gz
+
+
+    #open-AI configurations
+    spring.ai.openai.api-key=${OPENAI_API_KEY}
+
+    #pgvector configurations
+
+    app.pgvector.datasource.url=jdbc:postgresql://localhost:5432/   TestDB
+    app.pgvector.datasource.username=user
+    app.pgvector.datasource.password=password
+    app.pgvector.datasource.driver-class-name=org.postgresql.Driver
+
+    app.spring.ai.vectorstore.pgvector.initialize-schema=true
+    app.spring.ai.vectorstore.pgvector.schema-name=vector_search
+    app.spring.ai.vectorstore.pgvector.table-name=vector_store
+    #spring.main.allow-bean-definition-overriding=true
+
+    spring.autoconfigure.exclude = org.springframework.ai.    vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
+
+
+
+    
 
     ```
     if you are using Postgre SQL adjust the url and driver class name accordingly
@@ -127,6 +172,8 @@ This document provides comprehensive details about the Hotel Booking API endpoin
   - [Get All Bookings](#get-all-bookings)
   - [Get Booking by Confirmation Code](#get-booking-by-confirmation-code)
   - [Cancel Booking](#cancel-booking)
+- [Chatbot](#chatbot)
+  - [Chat with chatclient](#book-a-room)
 
 ## Authentication
 
@@ -379,6 +426,14 @@ Cancels an existing booking.
 
 **Path Parameters**:
 - `bookingId` - The ID of the booking to cancel
+
+### Chatbot
+
+Talk with the chatclient
+
+- **URL**: `/ai/chat?q="your query"`
+- **Auth Required**: No (You will be asked to login only if you want to proceed booking via the chatclient .)
+- **Permissions**: ADMIN or USER
 
 ## Response Structure
 
